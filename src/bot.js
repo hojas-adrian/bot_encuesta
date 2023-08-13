@@ -40,7 +40,7 @@ bot.command("start", (ctx) => {
 
 bot.command("help", (ctx) =>
   ctx.reply(
-    "Envia una encuesta en el siguiente formato:\n\nEl exto de la pregunta \n\n-cada opcion en una nueva linea \n-que empiece por un guion o un punto\n-debe tener al menos dos opcions\n-y terminar con el hashtag #encusta"
+    "Envia una encuesta en el siguiente formato:\n\nEl texto de la pregunta \n\n-cada opción en una nueva linea \n-que empiece por un guión o un punto\n-debe tener al menos dos opcions\n-y terminar con el hashtag\n\n#encuesta"
   )
 );
 

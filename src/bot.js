@@ -32,8 +32,8 @@ bot.command("start", (ctx) => {
       ctx.reply("No hago nada aqui, solo reenvio las encuestas");
       break;
     default:
-      ctx.reply(`${ctx.chat.id}`);
-      //ctx.reply(`Bot creado por @hojas_adrian, y no hace nada aqui`)
+      //ctx.reply(`${ctx.chat.id}`);
+      ctx.reply(`Bot creado por @hojas_adrian, y no hace nada aqui`)
       break;
   }
 });

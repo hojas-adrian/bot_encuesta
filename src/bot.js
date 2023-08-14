@@ -6,17 +6,13 @@ import { freeStorage } from "@grammyjs/storage-free";
 dotenv.config();
 const bot = new Bot(process.env.BOT_TOKEN);
 
-await bot.api.setMyCommands([
-  { command: "help", description: "Como se usa esto" },
-]);
-
 bot.use(
   session({
     initial: () => ({
       encuestas: [],
       currentIndex: null,
       admins: null,
-      off: true, storage: freeStorage(process.env.BOT_TOKEN)
+      off: true, //storage: freeStorage(process.env.BOT_TOKEN)
     }),
   })
 );
@@ -33,7 +29,7 @@ bot.command("start", (ctx) => {
       break;
     default:
       //ctx.reply(`${ctx.chat.id}`);
-      ctx.reply(`Bot creado por @hojas_adrian, y no hace nada aqui`)
+      ctx.reply(`Bot creado por @hojas_adrian, y no hace nada aqui`);
       break;
   }
 });
@@ -44,7 +40,7 @@ bot.command("help", (ctx) =>
   )
 );
 
-bot.command('id', ctx => ctx.reply(`${ctx.chat.id}`))
+bot.command("id", (ctx) => ctx.reply(`${ctx.chat.id}`));
 
 bot.on(":poll", async (ctx) => {
   //if (ctx.chat.id == -1001661296776) { //chat de encuestas xxx
@@ -54,13 +50,15 @@ bot.on(":poll", async (ctx) => {
   if (ctx.chat.id == -1001334523130) {
     //canal de encuestas
     const forwared = await ctx.forwardMessage(-1001661296776); //grupo xxx
-    ctx.pinChatMessage(forwared.message_id);
+    await bot.api.raw.pinChatMessage({
+      char_id: -1001661296776,
+      message_id: forwared.message_id,
+    });
   }
 });
 
 bot.use(async (ctx, next) => {
   if (ctx.chat.id == -1001661296776) {
-    //chat de encuestas xxx
     if (ctx.session.admins == null) {
       bot.api.raw
         .getChatAdministrators({
@@ -69,6 +67,7 @@ bot.use(async (ctx, next) => {
         .then((x) => {
           ctx.session.admins = x.map((admin) => admin.user.id);
           ctx.session.off = false;
+          console.log(ctx.session.admins)
           next();
         })
         .catch(() => {
@@ -80,7 +79,8 @@ bot.use(async (ctx, next) => {
 });
 
 bot.command("alive", (ctx) => {
-  let mensaje = (ctx.session.off == true) ? "🛑 el bot está offlinee" : "✅ alive";
+  let mensaje =
+    ctx.session.off == true ? "🛑 el bot está offlinee" : "✅ alive";
   ctx.reply(mensaje);
 });
 
@@ -91,6 +91,7 @@ const inlineKeyboard = new Menu("menu")
       payload: async (ctx) => `${await ctx.session.currentIndex}`,
     },
     async (ctx) => {
+      console.log("aceptar");
       const index = ctx.match;
       const data = ctx.session.encuestas[index];
       if (!ctx.session.admins.includes(ctx.from.id)) {
@@ -127,6 +128,7 @@ const inlineKeyboard = new Menu("menu")
     async (ctx) => {
       const index = ctx.match;
       const data = ctx.session.encuestas[index];
+      console.log("eliminar");
       if (data.id == ctx.from.id || ctx.session.admins.includes(ctx.from.id)) {
         await ctx.menu.close({ immediate: true });
         ctx.session.encuestas[index] = null;
@@ -174,7 +176,7 @@ bot.hears(/#encuesta/, async (ctx) => {
 
   if (options.length < 2) {
     ctx.reply(
-      `⚠️ Las encustas deben tener un formato correcto\n\nConsulte /help`,
+      `⚠️ Las encuestas deben tener un formato correcto\n\nConsulte /help`,
       {
         reply_to_message_id: ctx.message.message_id,
       }

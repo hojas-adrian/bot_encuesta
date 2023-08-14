@@ -5,6 +5,8 @@ import { freeStorage } from "@grammyjs/storage-free";
 
 dotenv.config();
 const bot = new Bot(process.env.BOT_TOKEN);
+const canal = process.env.CANAL
+const grupo = process.env.GRUPO
 
 bot.use(
   session({
@@ -19,12 +21,12 @@ bot.use(
 
 bot.command("start", (ctx) => {
   switch (ctx.chat.id) {
-    case -1001661296776: //chat de encuestas xxx
+    case grupo: //chat de encuestas xxx
       ctx.reply(
         "Envia una encuesta en el siguiente formato:\n\nEl texto de la pregunta \n\n-cada opción en una nueva linea \n-que empiece por un guion o un punto\n-debe tener al menos dos opcions\n-y terminar con el hashtag \n\n#encuesta"
       );
       break;
-    case -1001334523130: //canal
+    case canal: //canal
       ctx.reply("No hago nada aqui, solo reenvio las encuestas");
       break;
     default:
@@ -43,26 +45,26 @@ bot.command("help", (ctx) =>
 bot.command("id", (ctx) => ctx.reply(`${ctx.chat.id}`));
 
 bot.on(":poll", async (ctx) => {
-  //if (ctx.chat.id == -1001661296776) { //chat de encuestas xxx
+  //if (ctx.chat.id == grupo { //chat de encuestas xxx
   //reply con boton
   //aceptar enviar cancelar enviar
   //}
-  if (ctx.chat.id == -1001334523130) {
+  if (ctx.chat.id == canal) {
     //canal de encuestas
-    const forwared = await ctx.forwardMessage(-1001661296776); //grupo xxx
+    const forwared = await ctx.forwardMessage(grupo); //grupo xxx
     await bot.api.raw.pinChatMessage({
-      char_id: -1001661296776,
+      chat_id: grupo,
       message_id: forwared.message_id,
     });
   }
 });
 
 bot.use(async (ctx, next) => {
-  if (ctx.chat.id == -1001661296776) {
+  if (ctx.chat.id == grupo) {
     if (ctx.session.admins == null) {
       bot.api.raw
         .getChatAdministrators({
-          chat_id: `-1001334523130`, //canal
+          chat_id: `${canal}`, //canal
         })
         .then((x) => {
           ctx.session.admins = x.map((admin) => admin.user.id);
@@ -103,7 +105,7 @@ const inlineKeyboard = new Menu("menu")
 
       await ctx.menu.close({ immediate: true });
       await bot.api.raw.sendPoll({
-        chat_id: `-1001334523130`, //canal
+        chat_id: `${canal}`, //canal
         question: `Encuesta de ${data.user}:\n${data.caption}`,
         options: data.options,
         is_anonymous: false,

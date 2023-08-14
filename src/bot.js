@@ -68,13 +68,13 @@ bot.use(async (ctx, next) => {
           ctx.session.admins = x.map((admin) => admin.user.id);
           ctx.session.off = false;
           console.log(ctx.session.admins)
-          next();
         })
         .catch(() => {
           ctx.session.off = true;
           return;
         });
-    }
+    }    
+    next();
   }
 });
 

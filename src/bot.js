@@ -60,7 +60,8 @@ bot.on(":poll", async (ctx) => {
 });
 
 bot.use(async (ctx, next) => {
-  
+  if(ctx.chat){
+  if(ctx.chat.id == grupo) {
     if (ctx.session.admins == null) {
       bot.api.raw
         .getChatAdministrators({
@@ -77,7 +78,8 @@ bot.use(async (ctx, next) => {
         });
     }    
     next();
-  
+  }
+}
 });
 
 bot.command("alive", (ctx) => {

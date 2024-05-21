@@ -8,4 +8,4 @@ bot.use(limit());
 
 bot.use(inChannel);
 
-bot.start();
+

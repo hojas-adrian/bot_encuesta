@@ -52,6 +52,7 @@
     "https://deno.land/x/grammy_runner@v2.0.3/worker.ts": "b6f88b9fde15a8dd892c8d4781e8010ef37b80faf04d6ad18db4a43e4faa42ad",
     "https://deno.land/x/grammy_transformer_throttler@v1.2.1/deps.deno.ts": "07206f3858fdf585ad2fe96a1feef84330528208255da7018873de839014f28f",
     "https://deno.land/x/grammy_transformer_throttler@v1.2.1/mod.ts": "5a4d2132f9fb641a44233257bbb012b3157ccd3b377126a586b64a00a69719a9",
+    "https://deno.land/x/grammy_types@v3.4.4/manage.ts": "1d2b76d8735cdb56a2afe89097169ff4403b14016adb73e682fce61bc4c2efad",
     "https://deno.land/x/grammy_types@v3.5.2/api.ts": "ae04d6628e3d25ae805bc07a19475065044fc44cde0a40877405bc3544d03a5f",
     "https://deno.land/x/grammy_types@v3.5.2/inline.ts": "12b33002c4d7880b2e80aaee68ac344110360886efe48ab20d40e93b90849f04",
     "https://deno.land/x/grammy_types@v3.5.2/manage.ts": "3bc9717ba157d3b0e076ff256322f9bf7ea2da28eaf25ea1dbcdc84c9f780804",

@@ -1,46 +1,72 @@
 import { Composer } from "../../deps.ts";
 import { CHANNEL_ID, GROUP_ID } from "../helpers/constants.ts";
-import { finalActionKeyboard } from "../helpers/keyboards.ts";
-import { isPollOwner } from "../helpers/utils.ts";
-import { isChannelAdmin } from "../helpers/utils.ts";
-import { sayName } from "../helpers/utils.ts";
+import { delKv, getKv, setKv } from "../helpers/denoKv.ts";
+import { isPollOwner, isChannelAdmin } from "../helpers/utils.ts";
 
 const composer = new Composer();
 
 composer.callbackQuery("discard", async (ctx) => {
-  if (!(await isChannelAdmin(ctx) || isPollOwner(ctx))) {
+  if (!((await isChannelAdmin(ctx)) || isPollOwner(ctx))) {
     await ctx.answerCallbackQuery({
       text: "no tienes permiso para esta verga",
     });
   }
 
-  await ctx.editMessageText(
-    `quieres borrar la encusta?\nencuesta descartada por ${sayName(ctx)}`,
-    {
-      reply_markup: finalActionKeyboard,
-    },
-  );
+  await ctx.deleteMessage();
 });
 
 composer.callbackQuery("publish", async (ctx) => {
-  await ctx.api.forwardMessage(
-    CHANNEL_ID,
-    GROUP_ID,
-    ctx.callbackQuery.message?.reply_to_message?.message_id || 0,
-  );
+  if (!ctx.callbackQuery.message) {
+    return;
+  }
 
-  const msj = await ctx.api.forwardMessage(
-    GROUP_ID,
-    GROUP_ID,
-    ctx.callbackQuery.message?.reply_to_message?.message_id || 0,
-  );
+  if (!ctx.callbackQuery.message?.reply_to_message) {
+    await ctx.answerCallbackQuery({
+      text: "borraron tu puto mensaje",
+    });
 
-  await ctx.api.pinChatMessage(GROUP_ID, msj.message_id);
+    return await delKv({
+      field: "pollMessageId",
+      id: ctx.callbackQuery.message.message_id,
+    });
+  }
 
-  await ctx.api.deleteMessage(
-    GROUP_ID,
-    ctx.callbackQuery.message?.reply_to_message?.message_id || 0,
-  );
+  const dataPoll = await getKv({
+    field: "pollMessageId",
+    id: ctx.callbackQuery.message.message_id,
+  });
+
+  if (dataPoll.value && dataPoll.value.count >= 9) {
+    await ctx.api.forwardMessage(
+      CHANNEL_ID,
+      GROUP_ID,
+      ctx.callbackQuery.message?.reply_to_message?.message_id || 0
+    );
+
+    const msj = await ctx.api.forwardMessage(
+      GROUP_ID,
+      GROUP_ID,
+      ctx.callbackQuery.message?.reply_to_message?.message_id || 0
+    );
+
+    await ctx.api.pinChatMessage(GROUP_ID, msj.message_id);
+
+    await ctx.api.deleteMessage(
+      GROUP_ID,
+      ctx.callbackQuery.message?.reply_to_message?.message_id || 0
+    );
+  }
+
+  if (dataPoll.value) {
+    setKv({
+      field: "pollMessageId",
+      id: ctx.callbackQuery.message.message_id,
+      value: {
+        count: ++dataPoll.value.count,
+        votes: [...dataPoll.value.votes, ctx.callbackQuery.from.id],
+      },
+    });
+  }
 
   await ctx.answerCallbackQuery({
     text: "You were curious, indeed!",

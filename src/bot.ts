@@ -5,7 +5,7 @@ import admin from "./composer/admin.ts";
 
 export const bot = new Bot(BOT_TOKEN);
 
-// bot.use(limit());
+bot.use(limit());
 
-// bot.use(inChannel);
-// bot.use(admin);
+bot.use(inChannel);
+bot.use(admin);

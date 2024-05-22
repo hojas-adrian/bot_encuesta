@@ -1,7 +1,8 @@
 import { Composer } from "../../deps.ts";
 import { CHANNEL_ID, GROUP_ID } from "../helpers/constants.ts";
 import { delKv, getKv, setKv } from "../helpers/denoKv.ts";
-import { isPollOwner, isChannelAdmin } from "../helpers/utils.ts";
+import { voteKey } from "../helpers/keyboards.ts";
+import { isPollOwner, isChannelAdmin, sayName } from "../helpers/utils.ts";
 
 const composer = new Composer();
 
@@ -66,6 +67,13 @@ composer.callbackQuery("publish", async (ctx) => {
         votes: [...dataPoll.value.votes, ctx.callbackQuery.from.id],
       },
     });
+
+    ctx.editMessageText(
+      ` +1 ${ctx.callbackQuery.message.text}\n${sayName(ctx)}`,
+      {
+        reply_markup: voteKey,
+      }
+    );
   }
 
   await ctx.answerCallbackQuery({

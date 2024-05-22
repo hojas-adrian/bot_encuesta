@@ -7,5 +7,3 @@ export const bot = new Bot(BOT_TOKEN);
 bot.use(limit());
 
 bot.use(inChannel);
-
-

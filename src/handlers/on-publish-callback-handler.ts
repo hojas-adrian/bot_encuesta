@@ -24,6 +24,8 @@ const sendPoll = async (ctx: Context) => {
     return;
   }
 
+  await ctx.answerCallbackQuery("reenviando encuesta");
+
   await ctx.api.forwardMessage(
     CHANNEL_ID,
     GROUP_ID,
@@ -94,10 +96,6 @@ export default async (ctx: Context) => {
   if (voted()) {
     return ctx.answerCallbackQuery("ya tu votaste");
   }
-
-  const admins = await ctx.api.getChatAdministrators(CHANNEL_ID);
-
-  console.log(admins.some((admin) => admin.user.id === ctx.from?.id));
 
   if (
     (await isChannelAdmin(ctx)) ||

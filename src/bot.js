@@ -5,8 +5,8 @@ import { freeStorage } from "@grammyjs/storage-free";
 
 dotenv.config();
 const bot = new Bot(process.env.BOT_TOKEN);
-const canal = process.env.CANAL
-const grupo = process.env.GRUPO
+const canal = process.env.CANAL;
+const grupo = process.env.GRUPO;
 
 bot.use(
   session({
@@ -60,26 +60,26 @@ bot.on(":poll", async (ctx) => {
 });
 
 bot.use(async (ctx, next) => {
-  if(ctx.chat){
-  if(ctx.chat.id == grupo) {
-    if (ctx.session.admins == null) {
-      bot.api.raw
-        .getChatAdministrators({
-          chat_id: `${canal}`, //canal
-        })
-        .then((x) => {
-          ctx.session.admins = x.map((admin) => admin.user.id);
-          ctx.session.off = false;
-          console.log(ctx.session.admins)
-        })
-        .catch(() => {
-          ctx.session.off = true;
-          return;
-        });
-    }    
-    next();
+  if (ctx.chat) {
+    if (ctx.chat.id == grupo) {
+      if (ctx.session.admins == null) {
+        bot.api.raw
+          .getChatAdministrators({
+            chat_id: `${canal}`, //canal
+          })
+          .then((x) => {
+            ctx.session.admins = x.map((admin) => admin.user.id);
+            ctx.session.off = false;
+            console.log(ctx.session.admins);
+          })
+          .catch(() => {
+            ctx.session.off = true;
+            return;
+          });
+      }
+      next();
+    }
   }
-}
 });
 
 bot.command("alive", (ctx) => {

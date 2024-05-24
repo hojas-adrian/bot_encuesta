@@ -8,7 +8,7 @@ export const isChannelAdmin = async (
   const admins = await ctx.api.getChatAdministrators(CHANNEL_ID);
 
   return admins.some((admin) => {
-    admin.user.id === userId;
+    return admin.user.id == userId;
   });
 };
 
@@ -29,7 +29,9 @@ export const getReplyMessageId = (ctx: Context, reply = false) => {
 };
 
 export const sayName = (ctx: Context) => {
-  return ctx.from?.username ? `@${ctx.from?.username}` : ctx.from?.first_name;
+  return ctx.from?.username
+    ? `@${ctx.from?.username}`
+    : ctx.from?.first_name || "";
 };
 
 export const reply = async (

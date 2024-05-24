@@ -15,7 +15,7 @@ export default async (ctx: Context) => {
     }\n\n#pendiente
     `,
     getReplyMessageId(ctx),
-    voteKey
+    voteKey(0)
   );
 
   await setKv({

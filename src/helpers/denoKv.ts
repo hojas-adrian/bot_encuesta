@@ -7,7 +7,7 @@ export const setKv = async ({
 }: {
   field: "pollMessageId";
   id: number;
-  value: { count: number; votes: number[] };
+  value: { count: number; votes: { id: number; user: string }[] };
 }) => {
   await kv.set([field, id], value);
 };
@@ -29,5 +29,7 @@ export const getKv = async ({
   field: "pollMessageId";
   id: number;
 }) => {
-  return await kv.get<{ count: number; votes: number[] }>([field, id]);
+  return await kv.get<{ count: number; votes: { id: number; user: string }[] }>(
+    [field, id]
+  );
 };

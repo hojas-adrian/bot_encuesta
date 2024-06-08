@@ -40,10 +40,10 @@ const sendPoll = async (ctx: Context) => {
 
   await ctx.api.pinChatMessage(GROUP_ID, msj.message_id);
 
-  await ctx.api.deleteMessage(
-    GROUP_ID,
-    ctx.callbackQuery.message?.reply_to_message?.message_id || 0
-  );
+//   await ctx.api.deleteMessage(
+//    GROUP_ID,
+//    ctx.callbackQuery.message?.reply_to_message?.message_id || 0
+//  );
 
   await ctx.editMessageText(ctx.callbackQuery.message.text);
 };
